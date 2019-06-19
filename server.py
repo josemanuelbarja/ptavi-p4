@@ -9,10 +9,12 @@ import sys
 
 server = bytes(sys.argv[1], 'utf-8')
 
-class EchoHandler(socketserver.DatagramRequestHandler):
+
+class SIPRegisterHandler(socketserver.DatagramRequestHandler):
     """
     Echo server class
     """
+    tags = {'address': ''}
 
     def handle(self):
         """
@@ -20,15 +22,21 @@ class EchoHandler(socketserver.DatagramRequestHandler):
         (all requests will be handled by this method)
         """
         self.wfile.write(b"Hemos recibido tu peticion")
+        list = []
         for line in self.rfile:
-            print("El cliente nos manda ", line.decode('utf-8'))
+            list.append(line.decode('utf-8'))
+            data = list[0].split(' ')
+        print("El cliente nos manda ", list[0])
+        data = [data[1].split(':')[1]]
+        self.tags['address'] = self.client_address[0]
+        data[0].append(self.tags)
         print("IP y puerto del cliente: {}".format(self.client_address) + '\n')
+        print(data[0])
 
 if __name__ == "__main__":
     # Listens at localhost ('') port 6001
     # and calls the EchoHandler class to manage the request
-    serv = socketserver.UDPServer(('', int(server)), EchoHandler)
-
+    serv = socketserver.UDPServer(('', int(server)), SIPRegisterHandler)
     print("Lanzando servidor UDP de eco...")
     try:
         serv.serve_forever()
