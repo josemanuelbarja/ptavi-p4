@@ -14,8 +14,8 @@ try:
 except:
     sys.exit('Usage: python client.py ip port register sip_address expires')
 
-WORDS = (METHOD + ' sip:' + ID + ' SIP/2.0\r\n'
-+ 'Expires: ' + EXPIRES + '\r\n\r\n')
+WORDS = (METHOD + ' sip:' + ID + ' SIP/2.0\r\n' +
+         'Expires: ' + EXPIRES + '\r\n\r\n')
 
 # Creamos el socket, lo configuramos y lo atamos a un servidor/puerto
 with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as my_socket:
@@ -27,6 +27,6 @@ with socket.socket(socket.AF_INET, socket.SOCK_DGRAM) as my_socket:
         print('Recived:', data.decode('utf-8'))
     except:
         sys.exit('Connection Refused: No server listening at: ' + SERV_IP +
-        ':' + str(SERV_PORT))
+                 ':' + str(SERV_PORT))
 
 print("Socket terminado.")

@@ -6,6 +6,7 @@ import sys
 import json
 import time
 
+
 class SIPRegisterHandler(socketserver.DatagramRequestHandler):
 
     usr = {}
@@ -17,9 +18,9 @@ class SIPRegisterHandler(socketserver.DatagramRequestHandler):
         except:
             pass
 
-    def register2json(self,fich):
+    def register2json(self, fich):
         with open(fich, 'w') as filejson:
-            json.dump(self.usr,filejson,indent = 4)
+            json.dump(self.usr, filejson, indent=4)
 
     def handle(self):
         line = self.rfile.read()
@@ -36,18 +37,18 @@ class SIPRegisterHandler(socketserver.DatagramRequestHandler):
         except:
             sys.exit('Bad Request')
         if method == 'REGISTER':
-            deadtime = time.gmtime(time.time()+ 3600 + expires)
+            deadtime = time.gmtime(time.time() + 3600 + expires)
             strdeadtime = time.strftime('%d/%m/%Y %H:%M:%S', deadtime)
             sip_address = self.message[0].split(' ')[1].split(':')[1]
             if expires > 0:
                 usr_data = {'serverport': IP,
                             'expires': strdeadtime}
                 self.usr[sip_address] = usr_data
-                self.wfile.write(bytes(COD_OK,'utf-8'))
+                self.wfile.write(bytes(COD_OK, 'utf-8'))
             elif expires == 0:
                 try:
                     del self.usr[sip_address]
-                    self.wfile.write(bytes(COD_OK,'utf-8'))
+                    self.wfile.write(bytes(COD_OK, 'utf-8'))
                 except:
                     print('User Not Found')
         else:
